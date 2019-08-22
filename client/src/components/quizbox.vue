@@ -1,35 +1,45 @@
 <template>
   <div class="halo">
-    <div class="atas">
-      <p>
-        Dari 9 pemain akan disusun satu tim inti bola volly yang terdiri dari 6 orang.
-        Jika dua orang pemain diastikan menjadi tim inti
-        maka banyaknya cara untuk menyusun tim inti adalah
-      </p>
-    </div>
-    <div class="bawah">
-      <div class="up">
-        <div class="satu">
-          <p>86 cara</p>
-        </div>
-        <div class="dua">
-          <p>84 cara</p>
-        </div>
-      </div>
-      <div class="down">
-        <div class="tiga">
-          <p>35 cara</p>
-        </div>
-        <div class="empat">
-          <p>21 cara</p>
-        </div>
-      </div>
-    </div>
+    <b-row>
+      <b-card>
+        <b-card-text>{{questions[$route.params.id].question}}</b-card-text>
+      </b-card>
+    </b-row>
+
+    <b-row class="mt-4">
+      <b-col v-for="(a,i) in questions[$route.params.id].answers" :key="i" cols="6">
+        <b-button @click="sendAnswer()" class="m-2 btn-block">
+          <p>{{a}}</p>
+        </b-button>
+      </b-col>
+    </b-row>
   </div>
 </template>
 
 <script>
-export default {};
+import { mapState } from "vuex";
+export default {
+  data() {
+    return {
+      index: this.$route.params.id
+    };
+  },
+  created() {
+    this.$store.dispatch("putMath");
+  },
+  computed: mapState({
+    questions: "mathquestions"
+  }),
+  methods: {
+    sendAnswer() {
+      if (this.$route.params.id < 10) {
+        this.$router.push(`/quizzes/${Number(this.$route.params.id) + 1}`);
+      } else {
+        this.$router.push(`/rank`);
+      }
+    }
+  }
+};
 </script>
 
 <style>
