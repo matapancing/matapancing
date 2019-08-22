@@ -13,6 +13,7 @@
         </b-button>
       </b-col>
     </b-row>
+    <h1>{{index}}</h1>
   </div>
 </template>
 
@@ -38,7 +39,12 @@ export default {
         this.$router.push(`/rank`);
       }
     }
-  }
+  },
+  watch: {
+    '$route.params.id': function (val) {
+      this.index = val
+    }
+  },
 };
 </script>
 
