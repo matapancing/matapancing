@@ -10,7 +10,17 @@ export default new Router({
     {
       path: '/',
       name: 'home',
-      component: () => import(/* webpackChunkName: "about" */ './views/Home.vue'),
+      component: () => import(/* webpackChunkName: "home" */ './views/Home.vue'),
+    },
+    {
+      path: '/quizzes',
+      name: 'quizzes',
+      component: () => import(/* webpackChunkName: "quizzes" */ './views/quizzes.vue'),
+    },
+    {
+      path: '/rank',
+      name: 'rank',
+      component: () => import(/* webpackChunkName: "rank" */ './views/rank.vue'),
     },
   ],
 });
