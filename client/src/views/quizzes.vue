@@ -3,21 +3,24 @@
     <router-view></router-view>
     <div class="poin">
       <div id="circle">
-        <p>
-          point 2
-        </p>
+        <p>point 2</p>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import Vue from "vue";
 import quizbox from "../components/quizbox";
-import {mapState} from 'vuex'
+import { mapState } from "vuex";
+
 export default {
   name: "quizzes",
+  props: ["left-time"],
   components: {
     quizbox
+  },
+  methods: {
   }
 };
 </script>

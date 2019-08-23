@@ -9,7 +9,9 @@ import store from './store';
 import 'firebase/firestore';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
+import vueAwesomeCountdown  from 'vue-awesome-countdown'
 
+Vue.use(vueAwesomeCountdown, 'vac')
 Vue.use(BootstrapVue);
 
 firebase.initializeApp({

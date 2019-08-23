@@ -1,6 +1,14 @@
 <template>
   <div class="halo">
-    <b-row>
+    <h1>
+      Countdown:
+      <countdown ref="sessionTimer" :left-time="11000" @finish="nextPage">
+        <!-- 101 seconds -->
+        <span slot="process" slot-scope="{ timeObj }">{{ timeObj.ceil.s-1 }}</span>
+        <span slot="finish" ref="startCountdown(restart)"></span>
+      </countdown>
+    </h1>
+     <b-row>
       <b-card>
         <b-card-text>{{ quizData.questions[quizData.onPage].question }}</b-card-text>
       </b-card>
@@ -25,24 +33,29 @@ export default {
       quizData: {},
     };
   },
-  methods: {
-    // sendAnswer() {
-    //   if (this.$route.params.id < 10) {
-    //     this.$router.push(`/quizzes/${Number(this.$route.params.id) + 1}`);
-    //   } else {
-    //     this.$router.push(`/rank`);
-    //   }
-    // }
+  created() {
+    // this.$store.dispatch("putMath");
   },
-  watch: {
-    '$route.params.id': function (val) {
-      this.index = val
+  computed: mapState({
+    questions: "mathquestions"
+  }),
+  methods: {
+    sendAnswer() {
+      if (this.$route.params.id < 10) {
+        this.$router.push(`/quizzes/${Number(this.$route.params.id) + 1}`);
+      } else {
+        this.$router.push(`/rank`);
+      }
+    },
+    nextPage() {
+      this.$router.push(`/quizzes/${Number(this.$route.params.id) + 1}`);
+      this.$refs.sessionTimer.startCountdown(true);
     }
   },
-  mounted() {
-    db.collection('rooms').doc(this.$route.params.qid).onSnapshot(docRef => {
-      this.quizData = docRef.data()
-    })
+  watch: {
+    "$route.params.id": function(val) {
+      this.index = val;
+    }
   }
 };
 </script>
