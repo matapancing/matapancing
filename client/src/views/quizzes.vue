@@ -1,6 +1,6 @@
 <template>
   <div class="red">
-    <quizbox />
+    <router-view></router-view>
     <div class="poin">
       <div id="circle">
         <p>
@@ -13,13 +13,11 @@
 
 <script>
 import quizbox from "../components/quizbox";
+import {mapState} from 'vuex'
 export default {
   name: "quizzes",
   components: {
     quizbox
-  },
-  created(){
-      this.$store.dispatch('putMath')
   }
 };
 </script>
