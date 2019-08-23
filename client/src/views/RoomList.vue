@@ -4,8 +4,8 @@
       <b-button class="btn-sm" v-b-modal.modal-create-room>Create Room</b-button>
     </b-row>
     <b-row class="mt-5">
-      <b-col v-for="(a,i) in ['1','2','3','4','5']" :key="i" cols="3" class="px-1">
-        <Room></Room>
+      <b-col v-for="r in $store.state.rooms" cols="3"  :key="r.id" class="px-1">
+        <Room :detail="r"></Room>
       </b-col>
     </b-row>
     <CreateRoom></CreateRoom>
@@ -21,6 +21,9 @@ export default {
     Room,
     CreateRoom,
   },
+  created() {
+    this.$store.dispatch('getRooms')
+  }
 };
 </script>
 
