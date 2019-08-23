@@ -2,49 +2,48 @@
   <div class="halo">
     <b-row>
       <b-card>
-        <b-card-text>{{questions[$route.params.id].question}}</b-card-text>
+        <b-card-text>{{ quizData.questions[quizData.onPage].question }}</b-card-text>
       </b-card>
     </b-row>
 
     <b-row class="mt-4">
-      <b-col v-for="(a,i) in questions[$route.params.id].answers" :key="i" cols="6">
+      <b-col v-for="(a,i) in quizData.questions[quizData.onPage].answers" :key="i" cols="6">
         <b-button @click="sendAnswer()" class="m-2 btn-block">
           <p>{{a}}</p>
         </b-button>
       </b-col>
     </b-row>
-    <h1>{{index}}</h1>
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
+import db from '../main'
 export default {
   data() {
     return {
-      index: this.$route.params.id
+      quizData: {},
     };
   },
-  created() {
-    this.$store.dispatch("putMath");
-  },
-  computed: mapState({
-    questions: "mathquestions"
-  }),
   methods: {
-    sendAnswer() {
-      if (this.$route.params.id < 10) {
-        this.$router.push(`/quizzes/${Number(this.$route.params.id) + 1}`);
-      } else {
-        this.$router.push(`/rank`);
-      }
-    }
+    // sendAnswer() {
+    //   if (this.$route.params.id < 10) {
+    //     this.$router.push(`/quizzes/${Number(this.$route.params.id) + 1}`);
+    //   } else {
+    //     this.$router.push(`/rank`);
+    //   }
+    // }
   },
   watch: {
     '$route.params.id': function (val) {
       this.index = val
     }
   },
+  mounted() {
+    db.collection('rooms').doc(this.$route.params.qid).onSnapshot(docRef => {
+      this.quizData = docRef.data()
+    })
+  }
 };
 </script>
 
