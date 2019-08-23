@@ -1,16 +1,16 @@
 <template>
   <div class="home">
-    <Login/>
+    <Start/>
   </div>
 </template>
 
 <script>
-import Login from '@/components/Login.vue';
+import Start from '@/components/Start.vue'
 
 export default {
   name: 'home',
   components: {
-    Login,
+    Start,
   },
 };
 </script>

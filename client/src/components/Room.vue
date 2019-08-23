@@ -1,9 +1,9 @@
 <template>
   <div>
-      <b-card no-body class="mt-3">
-          <h1 class="text-center pt-2">{{ detail.name }}</h1>
+      <b-card no-body class="cards mt-3">
+          <h1 class="title text-center pt-2">{{ detail.name }}</h1>
           <b-row>
-          <b-col class="text-center">
+          <b-col class="text-center content">
               {{detail.players.length}} Players Joined
           </b-col>
           <b-col>
@@ -57,6 +57,28 @@ export default {
 </script>
 
 <style>
+.cards {
+  border-radius: .5rem;
+  opacity: 0.9;
+  margin: 2rem;
+  padding: 1px;
+  box-shadow: 0 0 25px gray;
+}
+.cards:hover {
+  padding: 0px;
+  box-shadow: 0 0 5px gray;
+}
+.title {
+  font-size: 35px;
+  font-family: 'Bangers', cursive;
+}
+.content {
+  font-size: 20px;
+  font-family: 'Rancho', cursive;
+}
+button {
+  font-family: 'Bangers', cursive;
+}
 .red {
   background-color: #ea0032;
 }

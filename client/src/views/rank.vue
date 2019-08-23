@@ -1,5 +1,8 @@
 <template>
   <div class="bodi">
+    <audio autoplay loop>
+        <source src="../audio/applause.mp3" type="audio/mp3" />
+      </audio>
       <div class="rank">
           <h1>Ranking</h1>
       </div>

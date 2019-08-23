@@ -12,6 +12,12 @@ export default new Router({
       name: 'home',
       component: () => import(/* webpackChunkName: "home" */ './views/Home.vue'),
     },
+    { //----------
+      path: '/login',
+      name: 'login',
+      component: () => import(/* webpackChunkName: "home" */ './components/Login.vue'),
+    },
+    //----------------
     {
       path: '/quizzes/:qid',
       name: 'quizzes',
