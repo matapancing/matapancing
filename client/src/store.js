@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import shuffle from '../helper/shuffle'
 import Axios from 'axios';
+import db from './main'
 
 Vue.use(Vuex);
 
@@ -31,7 +32,12 @@ export default new Vuex.Store({
           kumpulQuiz['correctAnswer'] = kuis.correct_answer
           kumpulKuis.push(kumpulQuiz)
         }
-        context.commit('FETCHQUESTION', kumpulKuis)
+        return db.collection('rooms')
+        .add({
+          questions: kumpulKuis
+        }).then(ref => {
+          console.log(ref)
+        })
       }).catch(err => {
         console.log(err)
       })

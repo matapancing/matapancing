@@ -1,6 +1,14 @@
 <template>
   <div class="halo">
-    <b-row>
+    <h1>
+      Countdown:
+      <countdown ref="sessionTimer" :left-time="11000" @finish="nextPage">
+        <!-- 101 seconds -->
+        <span slot="process" slot-scope="{ timeObj }">{{ timeObj.ceil.s-1 }}</span>
+        <span slot="finish" ref="startCountdown(restart)"></span>
+      </countdown>
+    </h1>
+    <!-- <b-row>
       <b-card>
         <b-card-text>{{questions[$route.params.id].question}}</b-card-text>
       </b-card>
@@ -13,7 +21,7 @@
         </b-button>
       </b-col>
     </b-row>
-    <h1>{{index}}</h1>
+    <h1>{{index}}</h1> -->
   </div>
 </template>
 
@@ -26,7 +34,7 @@ export default {
     };
   },
   created() {
-    this.$store.dispatch("putMath");
+    // this.$store.dispatch("putMath");
   },
   computed: mapState({
     questions: "mathquestions"
@@ -38,13 +46,17 @@ export default {
       } else {
         this.$router.push(`/rank`);
       }
+    },
+    nextPage() {
+      this.$router.push(`/quizzes/${Number(this.$route.params.id) + 1}`);
+      this.$refs.sessionTimer.startCountdown(true);
     }
   },
   watch: {
-    '$route.params.id': function (val) {
-      this.index = val
+    "$route.params.id": function(val) {
+      this.index = val;
     }
-  },
+  }
 };
 </script>
 
