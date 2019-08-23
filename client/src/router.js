@@ -13,16 +13,14 @@ export default new Router({
       component: () => import(/* webpackChunkName: "home" */ './views/Home.vue'),
     },
     {
-      path: '/quizzes',
+      path: '/quizzes/:qid',
       name: 'quizzes',
       component: () => import(/* webpackChunkName: "quizzes" */ './views/quizzes.vue'),
       children: [{
         path: ':id',
         name: 'question',
         component: () => import(/* webpackChunkName: "question" */ './components/quizbox.vue')
-      },
-      
-    ]
+      }]
     },
     {
       path: '/rank',
@@ -30,7 +28,7 @@ export default new Router({
       component: () => import(/* webpackChunkName: "rank" */ './views/rank.vue'),
     },
     {
-      path: '/room',
+      path: '/rooms',
       name: 'room',
       component: () => import(/* webpackChunkName: "room" */ './views/RoomList.vue'),
     },

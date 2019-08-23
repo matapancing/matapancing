@@ -1,17 +1,16 @@
 <template>
     <b-modal id="modal-create-room" centered title="Create Room">
-        <b-form>
+        <b-form @submit.prevent="createRoom()">
             <label>Room Name</label>
-            <b-input type="text" placeholder="Enter your room name..."></b-input>
-            <label class="mt-2">Max Players</label>
-            <b-input type="number" min="2" max="8"></b-input>
+            <b-input v-model="room" type="text" placeholder="Enter your room name..."></b-input>
         </b-form>
             <div slot="modal-footer" class="w-100">
             <b-button
             variant="primary"
             class="btn-block"
+            @click="createRoom()"
             >
-            Close
+            Create
             </b-button>
         </div>
     </b-modal>
@@ -19,7 +18,19 @@
 
 <script>
 export default {
-
+    data() {
+        return {
+            room: ''
+        }
+    },
+    methods: {
+        createRoom() {
+            this.$store.commit('CREATEROOM', this.room)
+            this.$store.dispatch('fetchQuestions')
+            this.room = ''
+            this.$bvModal.hide('modal-create-room')
+        }
+    }
 }
 </script>
 
