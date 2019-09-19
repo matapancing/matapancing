@@ -1,61 +1,83 @@
 <template>
   <div class="halo">
+    <h1>Score: {{score}}</h1>
     <h1>
-      Countdown:
       <countdown ref="sessionTimer" :left-time="11000" @finish="nextPage">
-        <!-- 101 seconds -->
         <span slot="process" slot-scope="{ timeObj }">{{ timeObj.ceil.s-1 }}</span>
         <span slot="finish" ref="startCountdown(restart)"></span>
       </countdown>
     </h1>
-     <b-row>
-      <b-card>
-        <b-card-text>{{ quizData.questions[quizData.onPage].question }}</b-card-text>
-      </b-card>
-    </b-row>
 
-    <b-row class="mt-4">
-      <b-col v-for="(a,i) in quizData.questions[quizData.onPage].answers" :key="i" cols="6">
-        <b-button @click="sendAnswer()" class="m-2 btn-block">
-          <p>{{a}}</p>
-        </b-button>
-      </b-col>
-    </b-row>
+    <div v-if="showQA">
+        <b-row>
+          <b-card>
+            <b-card-text>{{ quizData.questions[index].question }}</b-card-text>
+          </b-card>
+        </b-row>
+
+        <b-row class="mt-4">
+          <b-col v-for="(a,i) in quizData.questions[index].answers" :key="i" cols="6">
+            <b-button @click="sendAnswer(a)" class="m-2 btn-block">
+              <p>{{a}}</p>
+            </b-button>
+          </b-col>
+        </b-row>
+    </div>
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
 import db from '../main'
+import firebase from 'firebase'
+import Swal from 'sweetalert2'
 export default {
   data() {
     return {
       quizData: {},
+      score: 0,
+      showQA: true,
+      index: 0
     };
   },
-  created() {
-    // this.$store.dispatch("putMath");
-  },
-  computed: mapState({
-    questions: "mathquestions"
-  }),
   methods: {
-    sendAnswer() {
-      if (this.$route.params.id < 10) {
-        this.$router.push(`/quizzes/${Number(this.$route.params.id) + 1}`);
-      } else {
-        this.$router.push(`/rank`);
-      }
+    sendAnswer(a) {
+     if(this.quizData.questions[this.index].solution == a){
+       Swal.fire({
+         type: 'success',
+         text: 'Correct!'
+       })
+       this.score++
+     } else {
+       Swal.fire({
+         type: 'error',
+         text: 'Wrong Answer!'
+       })
+     }
+     this.showQA = false
     },
     nextPage() {
-      this.$router.push(`/quizzes/${Number(this.$route.params.id) + 1}`);
-      this.$refs.sessionTimer.startCountdown(true);
+      if(Number(this.index) > 6){
+        db.collection('rooms').doc(this.$route.params.qid).update({
+          totalScore: firebase.firestore.FieldValue.arrayUnion({
+            username: localStorage.getItem('username'),
+            score: this.score
+          })
+        })
+        this.$router.push(`/rank/${this.$route.params.qid}`)
+      } else {
+            this.index++
+            this.showQA = true
+            this.$refs.sessionTimer.startCountdown(true);
+      }
     }
   },
-  watch: {
-    "$route.params.id": function(val) {
-      this.index = val;
-    }
+  mounted() {
+    db.collection('rooms')
+      .doc(this.$route.params.qid)
+      .onSnapshot(docRef => {
+        this.quizData = docRef.data()
+      })
   }
 };
 </script>

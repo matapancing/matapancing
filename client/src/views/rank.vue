@@ -12,17 +12,9 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <th scope="row">1</th>
-            <td>Mark</td>
-          </tr>
-          <tr>
-            <th scope="row">2</th>
-            <td>Jacob</td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td>Larry</td>
+          <tr v-for="(p,i) in players" :key="i">
+            <th scope="row">{{ p.username }}</th>
+            <td>{{ p.score }}</td>
           </tr>
         </tbody>
       </table>
@@ -31,7 +23,22 @@
 </template>
 
 <script>
-export default {};
+import db from '../main.js'
+import { setTimeout } from 'timers';
+export default {
+  data() {
+    return {
+      players: []
+    }
+  },
+  mounted() {
+    db.collection('rooms').doc(this.$route.params.qid).onSnapshot(docRef => {
+        let data = docRef.data().totalScore
+        console.log(data)
+        this.players = data.sort(function(a, b){return b.score - a.score})
+      })
+  }
+};
 </script>
 
 <style>

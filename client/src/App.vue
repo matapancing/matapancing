@@ -1,8 +1,5 @@
 <template>
   <div id="app">
-    <b-button v-if="$store.state.isLogin" @click="$store.commit('LOGOUT')" class="btn-sm btn-danger" id="logout-button">
-      Logout
-    </b-button>
     <router-view></router-view>
   </div>
 </template>

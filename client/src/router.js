@@ -16,14 +16,9 @@ export default new Router({
       path: '/quizzes/:qid',
       name: 'quizzes',
       component: () => import(/* webpackChunkName: "quizzes" */ './views/quizzes.vue'),
-      children: [{
-        path: ':id',
-        name: 'question',
-        component: () => import(/* webpackChunkName: "question" */ './components/quizbox.vue')
-      }]
     },
     {
-      path: '/rank',
+      path: '/rank/:qid',
       name: 'rank',
       component: () => import(/* webpackChunkName: "rank" */ './views/rank.vue'),
     },

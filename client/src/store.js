@@ -4,6 +4,7 @@ import shuffle from '../helper/shuffle'
 import Axios from 'axios';
 import router from './router'
 import db from './main'
+import firebase from 'firebase'
 
 Vue.use(Vuex);
 
@@ -12,7 +13,8 @@ export default new Vuex.Store({
     isLogin: false,
     username: '',
     room: '',
-    rooms: []
+    rooms: [],
+    master: ''
   },
   mutations: {
     LOGIN(state) {
@@ -28,6 +30,7 @@ export default new Vuex.Store({
     },
     CREATEROOM(state, payload) {
       state.room = payload
+      state.master = payload
     },
     SAVEROOMS(state, payload) {
       state.rooms = payload
@@ -64,15 +67,15 @@ export default new Vuex.Store({
     createRoom({ state, commit }, payload) {
       db.collection('rooms').add({
         master: localStorage.getItem('username'),
-        players: [localStorage.getItem('username')],
+        players: [{username: localStorage.getItem('username'), score: 0 }],
         name: state.room,
         isPlaying: false,
         onPage: 0,
         questions: payload,
+        totalScore: []
       })
       .then(docRef => {
         localStorage.setItem('master', docRef.id)
-        // commit('CREATEROOM',  docRef.data())
       })
       .catch(console.log)
     },
@@ -86,7 +89,9 @@ export default new Vuex.Store({
       });
     },
     joinRoom({ commit }, payload) {
-      // db.collection("rooms").doc(payload).
+      db.collection("rooms").doc(payload).update({
+        players: firebase.firestore.FieldValue.arrayUnion({ username: localStorage.getItem('username'), score: 0 })
+      })
       commit('JOINROOM', payload)
     }
   },

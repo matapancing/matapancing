@@ -1,5 +1,8 @@
 <template>
   <div>
+      <b-button @click="$store.commit('LOGOUT')" class="btn-sm btn-danger" id="logout-button">
+        Logout
+      </b-button>
       <b-card no-body class="mt-3">
           <h1 class="text-center pt-2">{{ detail.name }}</h1>
           <b-row>
@@ -10,10 +13,10 @@
           <b-button v-if="!isJoined" class="btn-block btn-primary border-0" @click="joinRoom(detail.id)">
               Join Room
           </b-button>
-          <b-button v-if="detail.id == joinedRoom && !roomMaster" class="btn-block btn-primary border-0">
+          <b-button v-if="isJoined && detail.id == joinedRoom && !roomMaster" class="btn-block btn-primary border-0">
               Ready
           </b-button>
-          <b-button v-if="detail.id == roomMaster" class="btn-block btn-primary border-0" @click="playGame(detail.id)">
+          <b-button v-if="roomMaster == detail.id" class="btn-block btn-primary border-0" @click="playGame(detail.id)">
               Play
           </b-button>
           </b-col>
@@ -23,6 +26,7 @@
 </template>
 
 <script>
+import db from '../main.js';
 export default {
   props: ['detail'],
   data() {
@@ -38,15 +42,36 @@ export default {
       this.joinedRoom = payload
       this.isJoined = true
       console.log('JOINED', this.joinedRoom)
+
+      if(localStorage.getItem('master')){
+        this.roomMaster = localStorage.getItem('master')
+      }
     },
     playGame(id) {
-      this.$router.push(`/quizzes/${id}/0`)
-    }
+      db.collection('rooms').doc(id).update(
+        { isPlaying: true })
+      this.$router.push(`/quizzes/${id}`)
+    },
   },
-  mounted() {
+  created() {
+       db.collection('rooms')
+        .onSnapshot(() => {
+          db.collection('rooms').doc(localStorage.getItem('room')).onSnapshot(docRef => {
+            let isPlaying = docRef.data().isPlaying
+      
+            console.log('ONSNAPSHOT')
+      
+            if(isPlaying){
+              this.$router.push(`/quizzes/${docRef.id}`)
+            }
+          })
+        })
+
+      
+
     if(localStorage.getItem('master')) {
-      this.roomMaster = localStorage.getItem('master')
       this.isJoined = true
+      this.roomMaster = localStorage.getItem('master')
       this.joinedRoom = localStorage.getItem('room')
     } else if(localStorage.getItem('room')){
       this.isJoined = true

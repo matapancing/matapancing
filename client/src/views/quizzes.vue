@@ -1,11 +1,6 @@
 <template>
   <div class="red">
-    <router-view></router-view>
-    <div class="poin">
-      <div id="circle">
-        <p>point 2</p>
-      </div>
-    </div>
+    <quizbox></quizbox>
   </div>
 </template>
 
@@ -16,7 +11,6 @@ import { mapState } from "vuex";
 
 export default {
   name: "quizzes",
-  props: ["left-time"],
   components: {
     quizbox
   },
